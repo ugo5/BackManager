@@ -22,3 +22,25 @@ def create_app(config_name):
 
     return app
 
+def create_users():
+    db.create_all()
+
+    # Add users
+    user = find_or_create_user(u'admin', u'admin', 'Admin', u'admin@example.com')
+    db.session.commit()
+
+
+def find_or_create_user(username, name, password, useremail, role=None):
+    """ Find existing user or create new user """
+    from .models import users
+    user = users.query.filter(users.username == username).first()
+    if not user:
+        user = users(username=username,
+                    name=name,
+                    password=password,
+                    useremail=useremail,)
+                    #active=True)
+        if role:
+            user.roles.append(role)
+        db.session.add(user)
+    return user

@@ -16,6 +16,12 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
+def initialize():
+    ''' Initialize, creates the admin user. '''
+    from app import create_users
+    create_users()
+
+@manager.command
 def test():
     """Run the unit tests."""
     import unittest
